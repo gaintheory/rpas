@@ -70,10 +70,48 @@ const WARRANTY_FEATURES: FeatureRow[] = [
   },
 ];
 
-function CheckIcon() {
+const TIERS = [
+  {
+    key: 'basic'    as const,
+    name: 'Basic',
+    tagline: 'Powertrain',
+    border: 'border-gray-200',
+    header: 'bg-gray-100',
+    nameClass: 'text-secondary font-bold',
+  },
+  {
+    key: 'select'   as const,
+    name: 'Select',
+    tagline: 'Preferred Coverage',
+    border: 'border-primary/30',
+    header: 'bg-primary/10',
+    nameClass: 'text-primary font-extrabold',
+  },
+  {
+    key: 'ultimate' as const,
+    name: 'Ultimate',
+    tagline: 'Exclusionary',
+    border: 'border-secondary/20',
+    header: 'bg-secondary',
+    nameClass: 'text-white font-bold',
+  },
+] as const;
+
+function CheckIcon({ small }: { small?: boolean }) {
   return (
-    <svg className="w-5 h-5 text-primary mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg
+      className={`${small ? 'w-4 h-4' : 'w-5 h-5'} text-primary flex-none mt-0.5`}
+      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg className="w-4 h-4 text-gray-300 flex-none mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
 }
@@ -86,8 +124,8 @@ export default function WarrantyComparison() {
   return (
     <section className="bg-white py-16 md:py-24 border-t border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section */}
+
+        {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <span className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold tracking-[0.2em] uppercase rounded-full px-3 py-1.5 mb-4">
             Vehicle Protection
@@ -100,18 +138,8 @@ export default function WarrantyComparison() {
           </p>
         </div>
 
-        {/* Swipe Indicator for Mobile */}
-        <div className="lg:hidden flex justify-end mb-2">
-          <span className="text-xs text-muted font-medium flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-md px-2.5 py-1">
-            Swipe to compare
-            <svg className="w-3.5 h-3.5 animate-bounce-horizontal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </span>
-        </div>
-
-        {/* Comparison Table Container */}
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200 shadow-sm scrollbar-none bg-white">
+        {/* Desktop: comparison table */}
+        <div className="hidden lg:block w-full overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white">
           <table className="w-full min-w-[768px] border-collapse text-left text-sm">
             <thead>
               <tr className="bg-surface border-b border-gray-200">
@@ -158,7 +186,31 @@ export default function WarrantyComparison() {
           </table>
         </div>
 
-        {/* Bottom Call to Action Section */}
+        {/* Mobile: stacked tier cards */}
+        <div className="lg:hidden flex flex-col gap-3">
+          {TIERS.map(tier => (
+            <div key={tier.key} className={`rounded-xl border ${tier.border} overflow-hidden`}>
+              <div className={`${tier.header} px-5 py-4`}>
+                <p className={`text-lg ${tier.nameClass}`}>{tier.name}</p>
+                <p className={`text-xs mt-0.5 ${tier.key === 'ultimate' ? 'text-white/70' : 'text-muted'}`}>
+                  {tier.tagline}
+                </p>
+              </div>
+              <ul className="divide-y divide-gray-100 bg-white">
+                {WARRANTY_FEATURES.map(row => (
+                  <li key={row.name} className="flex items-start gap-3 px-5 py-3.5">
+                    {row[tier.key] ? <CheckIcon small /> : <XIcon />}
+                    <span className={`text-sm font-medium ${row[tier.key] ? 'text-secondary' : 'text-gray-400'}`}>
+                      {row.name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
         <div className="mt-12 text-center bg-surface border border-gray-200/70 rounded-2xl p-6 md:p-8 max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-left max-w-xl">
             <h4 className="text-base md:text-lg font-bold text-secondary">
@@ -179,7 +231,7 @@ export default function WarrantyComparison() {
           </a>
         </div>
 
-        {/* Prominent Center View Inventory Button */}
+        {/* View Inventory */}
         <div className="mt-12 text-center">
           <Link
             href="/inventory"

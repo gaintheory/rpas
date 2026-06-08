@@ -58,9 +58,9 @@ export default function InventoryStripClient({ vehicles }: { vehicles: Vehicle[]
       </div>
 
       {/* Mobile / tablet: horizontal snap scroll */}
-      <div className="lg:hidden flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none -mx-4 px-4">
+      <div className="lg:hidden flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none -mx-4 px-4">
         {vehicles.map(v => (
-          <div key={v.vin} className="flex-none w-72 snap-start">
+          <div key={v.vin} className="flex-none w-[85vw] snap-start">
             <InventoryGridCard vehicle={v} />
           </div>
         ))}
