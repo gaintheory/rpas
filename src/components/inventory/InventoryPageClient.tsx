@@ -446,8 +446,7 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
                 className="md:hidden inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors shrink-0"
               >
                 <svg className="w-4 h-4 flex-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M3 4h18M6 8h12M9 12h6" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h18M6 8h12M9 12h6" />
                 </svg>
                 Filters
                 {activeFilterCount > 0 && (
@@ -456,31 +455,6 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
                   </span>
                 )}
               </button>
-              {/* Saved toggle */}
-              <button
-                onClick={() => { const next = !showSaved; setShowSaved(next); pushParams({ saved: next ? '1' : '' }); }}
-                className={`inline-flex items-center gap-1.5 text-sm font-medium border rounded-lg px-3 py-1.5 transition-colors shrink-0 ${
-                  showSaved
-                    ? 'bg-primary/10 border-primary/30 text-primary'
-                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                <svg
-                  className={`w-4 h-4 flex-none transition-colors ${showSaved ? 'fill-primary stroke-primary' : 'fill-none stroke-gray-400'}`}
-                  viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-                >
-                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                Saved
-                {savedVins.length > 0 && (
-                  <span className={`rounded-full w-4 h-4 text-[10px] font-bold flex items-center justify-center leading-none ${
-                    showSaved ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'
-                  }`}>
-                    {savedVins.length}
-                  </span>
-                )}
-              </button>
-
               <span className="text-sm text-gray-500 truncate">
                 <span className="font-semibold text-gray-800">{filtered.length}</span>
                 {showSaved ? ' saved' : ` vehicle${filtered.length !== 1 ? 's' : ''}`}
@@ -488,8 +462,10 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
               {/* Active filter chips */}
               <div className="hidden sm:flex items-center gap-1.5 flex-wrap">
                 {bodyFilter !== 'All' && (
-                  <button onClick={() => { setBodyFilter('All'); pushParams({ body: 'All' }); }}
-                    className="inline-flex items-center gap-1 text-[11px] bg-secondary/8 text-secondary font-medium rounded-full px-2.5 py-0.5 hover:bg-secondary/15 transition-colors">
+                  <button
+                    onClick={() => { setBodyFilter('All'); pushParams({ body: 'All' }); }}
+                    className="inline-flex items-center gap-1 text-[11px] bg-secondary/8 text-secondary font-medium rounded-full px-2.5 py-0.5 hover:bg-secondary/15 transition-colors"
+                  >
                     {bodyFilter}
                     <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -497,8 +473,10 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
                   </button>
                 )}
                 {makeFilter && (
-                  <button onClick={() => { setMakeFilter(''); pushParams({ make: '' }); }}
-                    className="inline-flex items-center gap-1 text-[11px] bg-secondary/8 text-secondary font-medium rounded-full px-2.5 py-0.5 hover:bg-secondary/15 transition-colors">
+                  <button
+                    onClick={() => { setMakeFilter(''); pushParams({ make: '' }); }}
+                    className="inline-flex items-center gap-1 text-[11px] bg-secondary/8 text-secondary font-medium rounded-full px-2.5 py-0.5 hover:bg-secondary/15 transition-colors"
+                  >
                     {makeFilter}
                     <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -506,9 +484,11 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
                   </button>
                 )}
                 {searchQuery && (
-                  <button onClick={() => { setSearchQuery(''); pushParams({ q: '' }); }}
-                    className="inline-flex items-center gap-1 text-[11px] bg-secondary/8 text-secondary font-medium rounded-full px-2.5 py-0.5 hover:bg-secondary/15 transition-colors">
-                    "{searchQuery}"
+                  <button
+                    onClick={() => { setSearchQuery(''); pushParams({ q: '' }); }}
+                    className="inline-flex items-center gap-1 text-[11px] bg-secondary/8 text-secondary font-medium rounded-full px-2.5 py-0.5 hover:bg-secondary/15 transition-colors"
+                  >
+                    {'"'}{searchQuery}{'"'}
                     <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -516,16 +496,41 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
                 )}
               </div>
             </div>
-            <select
-              value={sort}
-              onChange={e => { setSort(e.target.value as Sort); pushParams({ sort: e.target.value }); }}
-              className="shrink-0 text-sm font-medium border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
-            >
-              <option value="newest">Newest first</option>
-              <option value="price_asc">Price: Low → High</option>
-              <option value="price_desc">Price: High → Low</option>
-              <option value="miles_asc">Miles: Low → High</option>
-            </select>
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Saved toggle */}
+              <button
+                onClick={() => { const next = !showSaved; setShowSaved(next); pushParams({ saved: next ? '1' : '' }); }}
+                className={showSaved
+                  ? 'inline-flex items-center gap-1.5 text-sm font-medium border rounded-lg px-3 py-1.5 transition-colors bg-primary/10 border-primary/30 text-primary'
+                  : 'inline-flex items-center gap-1.5 text-sm font-medium border rounded-lg px-3 py-1.5 transition-colors border-gray-200 text-gray-600 hover:bg-gray-50'}
+              >
+                <svg
+                  className={showSaved ? 'w-4 h-4 flex-none transition-colors fill-primary stroke-primary' : 'w-4 h-4 flex-none transition-colors fill-none stroke-gray-400'}
+                  viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <span className="hidden sm:inline">Saved</span>
+                {savedVins.length > 0 && (
+                  <span className={showSaved
+                    ? 'rounded-full w-4 h-4 text-[10px] font-bold flex items-center justify-center leading-none bg-primary text-white'
+                    : 'rounded-full w-4 h-4 text-[10px] font-bold flex items-center justify-center leading-none bg-gray-200 text-gray-600'}
+                  >
+                    {savedVins.length}
+                  </span>
+                )}
+              </button>
+              <select
+                value={sort}
+                onChange={e => { setSort(e.target.value as Sort); pushParams({ sort: e.target.value }); }}
+                className="shrink-0 text-sm font-medium border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+              >
+                <option value="newest">Newest first</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="miles_asc">Miles: Low to High</option>
+              </select>
+            </div>
           </div>
 
           {/* Grid */}
