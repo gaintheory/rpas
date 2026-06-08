@@ -18,6 +18,23 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [savedCount, setSavedCount] = useState(0);
+
+  useEffect(() => {
+    const read = () => {
+      try {
+        const saved: string[] = JSON.parse(localStorage.getItem('rpas_favorites') ?? '[]');
+        setSavedCount(saved.length);
+      } catch {}
+    };
+    read();
+    window.addEventListener('rpas_favorites_changed', read);
+    window.addEventListener('storage', read);
+    return () => {
+      window.removeEventListener('rpas_favorites_changed', read);
+      window.removeEventListener('storage', read);
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -76,6 +93,19 @@ export default function Navbar() {
 
             {/* Desktop CTAs */}
             <div className="hidden md:flex items-center gap-3">
+              <Link href="/inventory?saved=1" className="relative p-1.5 group" aria-label="Saved vehicles">
+                <svg
+                  className={`w-5 h-5 transition-colors ${isTransparent ? 'stroke-white fill-none group-hover:fill-white/20' : 'stroke-gray-400 fill-none group-hover:stroke-gray-600'}`}
+                  viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                {savedCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                    {savedCount}
+                  </span>
+                )}
+              </Link>
               <a
                 href={`tel:${dealer.phone.replace(/[^0-9]/g, '')}`}
                 className={`text-sm font-medium border rounded-full px-4 py-1.5 transition-colors

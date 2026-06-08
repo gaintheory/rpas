@@ -94,6 +94,7 @@ export default function InventoryGridCard({ vehicle }: { vehicle: Vehicle }) {
       const next = liked ? saved.filter(v => v !== vehicle.vin) : [...saved, vehicle.vin];
       localStorage.setItem('rpas_favorites', JSON.stringify(next));
       setLiked(!liked);
+      window.dispatchEvent(new Event('rpas_favorites_changed'));
     } catch {}
   };
 

@@ -158,7 +158,7 @@ function sortVehicles(vehicles: Vehicle[], sort: Sort): Vehicle[] {
 function pushParams(updates: Record<string, string>) {
   const params = new URLSearchParams(window.location.search);
   const defaults: Record<string, string> = {
-    body: 'All', price: 'any', sort: 'newest', make: '', year: 'any', miles: 'any', q: '',
+    body: 'All', price: 'any', sort: 'newest', make: '', year: 'any', miles: 'any', q: '', saved: '',
   };
   Object.entries(updates).forEach(([k, v]) => {
     if (v === defaults[k]) params.delete(k); else params.set(k, v);
@@ -220,6 +220,8 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
   const [milesFilter,  setMilesFilter]  = useState<MilesFilter>('any');
   const [sort,         setSort]         = useState<Sort>('newest');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [savedVins,         setSavedVins]         = useState<string[]>([]);
+  const [showSaved,         setShowSaved]         = useState(false);
 
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
@@ -233,6 +235,19 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
     if (yr && YEAR_OPTIONS.some(o => o.value === yr)) setYearFilter(yr as YearFilter);
     if (mi && MILES_OPTIONS.some(o => o.value === mi)) setMilesFilter(mi as MilesFilter);
     if (q)  setSearchQuery(q);
+    if (p.get('saved') === '1') setShowSaved(true);
+  }, []);
+
+  useEffect(() => {
+    const read = () => {
+      try {
+        const saved: string[] = JSON.parse(localStorage.getItem('rpas_favorites') ?? '[]');
+        setSavedVins(saved);
+      } catch {}
+    };
+    read();
+    window.addEventListener('rpas_favorites_changed', read);
+    return () => window.removeEventListener('rpas_favorites_changed', read);
   }, []);
 
   // Compute make options + body counts from full unfiltered inventory
@@ -257,17 +272,19 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
     return map;
   }, [vehicles]);
 
-  const filtered = sortVehicles(
-    vehicles.filter(v =>
-      matchesSearch(v, searchQuery) &&
-      matchesBody(v, bodyFilter) &&
-      matchesPrice(v, priceFilter) &&
-      matchesYear(v, yearFilter) &&
-      matchesMiles(v, milesFilter) &&
-      matchesMake(v, makeFilter)
-    ),
-    sort,
-  );
+  const filtered = showSaved
+    ? sortVehicles(vehicles.filter(v => savedVins.includes(v.vin)), sort)
+    : sortVehicles(
+        vehicles.filter(v =>
+          matchesSearch(v, searchQuery) &&
+          matchesBody(v, bodyFilter) &&
+          matchesPrice(v, priceFilter) &&
+          matchesYear(v, yearFilter) &&
+          matchesMiles(v, milesFilter) &&
+          matchesMake(v, makeFilter)
+        ),
+        sort,
+      );
 
   const activeFilterCount = [
     bodyFilter !== 'All',
@@ -439,9 +456,34 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
                   </span>
                 )}
               </button>
+              {/* Saved toggle */}
+              <button
+                onClick={() => { const next = !showSaved; setShowSaved(next); pushParams({ saved: next ? '1' : '' }); }}
+                className={`inline-flex items-center gap-1.5 text-sm font-medium border rounded-lg px-3 py-1.5 transition-colors shrink-0 ${
+                  showSaved
+                    ? 'bg-primary/10 border-primary/30 text-primary'
+                    : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <svg
+                  className={`w-4 h-4 flex-none transition-colors ${showSaved ? 'fill-primary stroke-primary' : 'fill-none stroke-gray-400'}`}
+                  viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Saved
+                {savedVins.length > 0 && (
+                  <span className={`rounded-full w-4 h-4 text-[10px] font-bold flex items-center justify-center leading-none ${
+                    showSaved ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'
+                  }`}>
+                    {savedVins.length}
+                  </span>
+                )}
+              </button>
+
               <span className="text-sm text-gray-500 truncate">
                 <span className="font-semibold text-gray-800">{filtered.length}</span>
-                {' '}vehicle{filtered.length !== 1 ? 's' : ''}
+                {showSaved ? ' saved' : ` vehicle${filtered.length !== 1 ? 's' : ''}`}
               </span>
               {/* Active filter chips */}
               <div className="hidden sm:flex items-center gap-1.5 flex-wrap">
@@ -491,6 +533,14 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
             {filtered.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filtered.map(v => <InventoryGridCard key={v.id} vehicle={v} />)}
+              </div>
+            ) : showSaved ? (
+              <div className="text-center py-24">
+                <svg className="w-14 h-14 text-gray-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <p className="text-gray-700 font-semibold text-lg mb-2">No saved vehicles yet</p>
+                <p className="text-gray-400 text-sm">Tap the ♥ on any vehicle card to save it here.</p>
               </div>
             ) : (
               <div className="text-center py-24">
