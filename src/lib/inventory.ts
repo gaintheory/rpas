@@ -10,10 +10,15 @@ function vinKey(vin: string): string {
 }
 
 export async function getAvailableInventory(limit = 100): Promise<Vehicle[]> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    console.warn('Supabase URL or Service Role Key is missing. Skipping inventory fetch.');
+    return [];
+  }
+
+  const supabase = createClient(url, key);
 
   // Run both queries in parallel
   const [inspResult, kitResult] = await Promise.all([
