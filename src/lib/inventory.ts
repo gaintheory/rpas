@@ -51,7 +51,7 @@ export async function getAvailableInventory(limit = 100): Promise<Vehicle[]> {
   return (inspResult.data ?? [])
     .map(insp => {
       const cleanPhotos = (insp.photo_urls ?? []).filter(
-        (url: string) => !url.includes('Highlight')
+        (url: string) => !/-(highlight|1|2)\.(jpg|jpeg|png|webp|avif)$/i.test(url)
       );
       return { ...insp, photo_urls: cleanPhotos };
     })
@@ -112,7 +112,7 @@ export async function getVehicleByVin(vin: string): Promise<Vehicle | null> {
   const kit = kits && kits.length > 0 ? kits[0] : null;
 
   const cleanPhotos = (insp.photo_urls ?? []).filter(
-    (url: string) => !url.includes('Highlight')
+    (url: string) => !/-(highlight|1|2)\.(jpg|jpeg|png|webp|avif)$/i.test(url)
   );
 
   return {
