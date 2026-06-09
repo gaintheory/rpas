@@ -49,7 +49,13 @@ export async function getAvailableInventory(limit = 100): Promise<Vehicle[]> {
 
   // Merge kit enrichment into each inspection vehicle (skip those with no photos)
   return (inspResult.data ?? [])
-    .filter(insp => Array.isArray(insp.photo_urls) && insp.photo_urls.length > 0)
+    .map(insp => {
+      const cleanPhotos = (insp.photo_urls ?? []).filter(
+        (url: string) => !url.includes('Highlight')
+      );
+      return { ...insp, photo_urls: cleanPhotos };
+    })
+    .filter(insp => insp.photo_urls.length > 0)
     .map(insp => {
       const kit = kitMap.get(vinKey(insp.vin)) ?? null;
       return {
@@ -105,8 +111,13 @@ export async function getVehicleByVin(vin: string): Promise<Vehicle | null> {
 
   const kit = kits && kits.length > 0 ? kits[0] : null;
 
+  const cleanPhotos = (insp.photo_urls ?? []).filter(
+    (url: string) => !url.includes('Highlight')
+  );
+
   return {
     ...insp,
+    photo_urls:     cleanPhotos,
     body:           kit?.body_style     ?? insp.body,
     drivetrain:     kit?.drivetrain     ?? null,
     trim:           kit?.trim           ?? null,
