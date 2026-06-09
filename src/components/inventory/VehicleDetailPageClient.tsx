@@ -168,13 +168,19 @@ export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle 
                     {photos.length > 1 && (
                       <>
                         <button
-                          onClick={() => setActivePhotoIdx((i) => (i - 1 + photos.length) % photos.length)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActivePhotoIdx((i) => (i - 1 + photos.length) % photos.length);
+                          }}
                           className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white text-secondary hover:text-primary w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all"
                         >
                           ‹
                         </button>
                         <button
-                          onClick={() => setActivePhotoIdx((i) => (i + 1) % photos.length)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActivePhotoIdx((i) => (i + 1) % photos.length);
+                          }}
                           className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white text-secondary hover:text-primary w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all"
                         >
                           ›
