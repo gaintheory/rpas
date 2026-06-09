@@ -19,7 +19,7 @@ export default function InventoryListCard({ vehicle }: { vehicle: Vehicle }) {
   const miles = parseFloat(vehicle.miles ?? '0');
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row">
+    <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300 flex flex-col sm:flex-row">
 
       {/* Photo */}
       <Link

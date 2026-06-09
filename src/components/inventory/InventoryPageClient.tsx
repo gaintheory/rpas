@@ -386,7 +386,7 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
+    <div className="min-h-screen bg-gray-100/75 pt-16">
 
       {/* ── Search header ──────────────────────────────────────────── */}
       <div className="sticky top-16 z-40 bg-white border-b border-gray-200">
