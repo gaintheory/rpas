@@ -114,7 +114,7 @@ export default function InventoryGridCard({ vehicle }: { vehicle: Vehicle }) {
   ];
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+    <div className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
 
       {/* Photo — clicking the image navigates; arrows only cycle */}
       <div
