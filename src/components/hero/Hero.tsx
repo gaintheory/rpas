@@ -53,11 +53,11 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* CTAs + BBB */}
-        <div className="mt-7 flex flex-wrap items-center gap-3">
+        {/* CTAs */}
+        <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-xs sm:max-w-none">
           <Link
             href="/inventory"
-            className="bg-primary text-white font-semibold text-sm rounded-full px-7 py-3 hover:opacity-90 transition-opacity shadow-lg inline-flex items-center gap-2"
+            className="bg-primary text-white font-semibold text-sm rounded-full px-7 py-3 hover:opacity-90 transition-opacity shadow-lg inline-flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             Browse Inventory
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,25 +66,9 @@ export default function Hero() {
           </Link>
           <a
             href={`tel:${dealer.phone.replace(/[^0-9]/g, '')}`}
-            className="border border-white/40 text-white font-semibold text-sm rounded-full px-7 py-3 hover:bg-white/10 transition-colors"
+            className="border border-white/40 text-white font-semibold text-sm rounded-full px-7 py-3 hover:bg-white/10 transition-colors text-center w-full sm:w-auto"
           >
             Talk to Us
-          </a>
-
-          {/* BBB Accredited badge */}
-          <a
-            href={BBB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3.5 py-2 hover:bg-white/20 transition-colors"
-            title="BBB Accredited Business"
-          >
-            <span className="text-white font-black text-sm tracking-tight leading-none">BBB</span>
-            <div className="w-px h-5 bg-white/20" />
-            <div className="flex flex-col leading-none gap-0.5">
-              <span className="text-white font-bold text-xs">A+ Rating</span>
-              <span className="text-white/50 text-[9px] uppercase tracking-widest">Accredited</span>
-            </div>
           </a>
         </div>
       </div>

@@ -24,6 +24,24 @@ export default function Footer() {
             >
               {dealer.email}
             </a>
+
+            {/* BBB Accredited badge */}
+            <div className="mt-5">
+              <a
+                href="https://www.bbb.org/us/tn/murfreesboro/profile/used-car-dealers/right-price-auto-sales-inc-0573-37034137/#sealclick"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3.5 py-2 hover:bg-white/10 transition-colors"
+                title="BBB Accredited Business"
+              >
+                <span className="text-white font-black text-sm tracking-tight leading-none">BBB</span>
+                <div className="w-px h-5 bg-white/20" />
+                <div className="flex flex-col leading-none gap-0.5">
+                  <span className="text-white font-bold text-xs">A+ Rating</span>
+                  <span className="text-white/50 text-[9px] uppercase tracking-widest">Accredited</span>
+                </div>
+              </a>
+            </div>
           </div>
 
           {/* Hours */}
