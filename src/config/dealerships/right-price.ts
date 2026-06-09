@@ -24,6 +24,6 @@ export const dealer = {
     primary: '#c0392b',
     secondary: '#1a1a2e',
   },
-  creditAppUrl: 'https://vehicle-intake.vercel.app/credit',
+  creditAppUrl: '/apply',
   mapUrl: 'https://maps.google.com/?q=5223+NW+Broad+St+Murfreesboro+TN+37129',
 };

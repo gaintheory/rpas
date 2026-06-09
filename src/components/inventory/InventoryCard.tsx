@@ -1,5 +1,7 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { type Vehicle, getBadge } from '@/lib/vehicle';
+import { dealer } from '@/config/dealerships/right-price';
 import { getWeeklyPayment } from '@/lib/payments';
 
 const BADGE_COLORS: Record<string, string> = {
@@ -12,7 +14,7 @@ export default function InventoryCard({ vehicle }: { vehicle: Vehicle }) {
   const badge = getBadge(vehicle);
   const weekly = getWeeklyPayment(vehicle.price);
   const photo = vehicle.photo_urls?.[0];
-  const applyUrl = `https://vehicle-intake.vercel.app/credit?vin=${vehicle.vin}`;
+  const applyUrl = `${dealer.creditAppUrl}?vin=${vehicle.vin}`;
   const miles = parseFloat(vehicle.miles ?? '0');
 
   return (
@@ -58,14 +60,12 @@ export default function InventoryCard({ vehicle }: { vehicle: Vehicle }) {
         <p className="text-xs text-muted mt-0.5">
           {miles > 0 ? `${miles.toLocaleString()} mi` : 'Miles TBD'}
         </p>
-        <a
+        <Link
           href={applyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
           className="mt-auto pt-3 block w-full text-center text-sm font-semibold text-white bg-secondary rounded-lg py-2 hover:bg-secondary/90 transition-colors"
         >
           Apply Now
-        </a>
+        </Link>
       </div>
     </div>
   );

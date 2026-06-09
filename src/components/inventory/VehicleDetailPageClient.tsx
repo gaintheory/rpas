@@ -316,14 +316,12 @@ export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle 
 
               {/* Primary Call-to-Actions */}
               <div className="space-y-3">
-                <a
+                <Link
                   href={applyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="w-full flex items-center justify-center font-bold text-sm bg-primary text-white py-3 px-4 rounded-xl hover:opacity-90 transition-opacity shadow-md text-center"
                 >
                   Apply for Financing
-                </a>
+                </Link>
                 <a
                   href={callUrl}
                   className="w-full flex items-center justify-center font-bold text-sm border border-secondary text-secondary hover:bg-secondary hover:text-white py-3 px-4 rounded-xl transition-colors text-center"

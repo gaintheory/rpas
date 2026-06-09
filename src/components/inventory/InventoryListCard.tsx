@@ -93,14 +93,12 @@ export default function InventoryListCard({ vehicle }: { vehicle: Vehicle }) {
 
         {/* CTAs */}
         <div className="mt-4 flex gap-3">
-          <a
+          <Link
             href={applyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             className="flex-1 text-center text-sm font-semibold text-white bg-secondary rounded-lg py-2.5 hover:bg-secondary/90 transition-colors"
           >
             Apply Now
-          </a>
+          </Link>
           <a
             href={callUrl}
             className="flex-none px-5 text-center text-sm font-semibold text-secondary border border-secondary/30 rounded-lg py-2.5 hover:bg-secondary hover:text-white hover:border-secondary transition-colors"

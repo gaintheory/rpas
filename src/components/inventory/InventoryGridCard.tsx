@@ -181,17 +181,15 @@ export default function InventoryGridCard({ vehicle }: { vehicle: Vehicle }) {
           </svg>
           Vehicle History
         </a>
-        <a
+        <Link
           href={applyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
           className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-secondary rounded-lg py-2.5 hover:bg-secondary/90 transition-colors"
         >
           <svg className="w-3.5 h-3.5 flex-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Apply Now
-        </a>
+        </Link>
       </div>
 
       {/* Est. Payment accordion */}

@@ -63,7 +63,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {[
                 { label: 'Inventory', href: '/inventory' },
-                { label: 'Apply Now', href: dealer.creditAppUrl, external: true },
+                { label: 'Apply Now', href: dealer.creditAppUrl, external: false },
                 { label: 'About Us', href: '/about' },
                 { label: 'Contact', href: '/contact' },
               ].map(({ label, href, external }) => (
@@ -79,14 +79,12 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-            <a
+            <Link
               href={dealer.creditAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
               className="mt-6 inline-block bg-primary text-white text-sm font-semibold rounded-full px-5 py-2 hover:opacity-90 transition-opacity"
             >
               Start Your Application →
-            </a>
+            </Link>
           </div>
 
         </div>

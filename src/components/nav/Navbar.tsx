@@ -9,7 +9,7 @@ import { dealer } from '@/config/dealerships/right-price';
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Inventory', href: '/inventory' },
-  { label: 'Apply', href: dealer.creditAppUrl, external: true },
+  { label: 'Apply', href: dealer.creditAppUrl, external: false },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
@@ -116,14 +116,12 @@ export default function Navbar() {
               >
                 {dealer.phone}
               </a>
-              <a
+              <Link
                 href={dealer.creditAppUrl}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-sm font-semibold bg-primary text-white rounded-full px-4 py-1.5 hover:opacity-90 transition-opacity"
               >
                 Apply Now
-              </a>
+              </Link>
             </div>
 
             {/* Mobile: call + hamburger */}
