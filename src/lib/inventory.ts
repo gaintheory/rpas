@@ -62,3 +62,60 @@ export async function getAvailableInventory(limit = 100): Promise<Vehicle[]> {
       } as Vehicle;
     });
 }
+
+export async function getVehicleByVin(vin: string): Promise<Vehicle | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    console.warn('Supabase URL or Service Role Key is missing. Skipping vehicle lookup.');
+    return null;
+  }
+
+  const supabase = createClient(url, key);
+
+  // Fetch the inspection record matching the VIN
+  const { data: inspections, error: inspError } = await supabase
+    .from('inspections')
+    .select('*')
+    .eq('vin', vin)
+    .limit(1);
+
+  if (inspError) {
+    console.error('Vehicle detail fetch error (inspection):', inspError.message);
+    return null;
+  }
+
+  if (!inspections || inspections.length === 0) {
+    return null;
+  }
+
+  const insp = inspections[0];
+
+  // Fetch matching kit data using exact match or last-16 character match fallback
+  const { data: kits, error: kitError } = await supabase
+    .from('vehicles')
+    .select('drivetrain, trim, fuel_type, stock_number, body_style, description, interior_color, exterior_color, engine')
+    .or(`vin.eq.${vin},vin.like.%${vin.slice(1)}`)
+    .limit(1);
+
+  if (kitError) {
+    console.error('Vehicle detail fetch error (kit):', kitError.message);
+  }
+
+  const kit = kits && kits.length > 0 ? kits[0] : null;
+
+  return {
+    ...insp,
+    body:           kit?.body_style     ?? insp.body,
+    drivetrain:     kit?.drivetrain     ?? null,
+    trim:           kit?.trim           ?? null,
+    stock_number:   kit?.stock_number   ?? null,
+    fuel_type:      kit?.fuel_type      ?? null,
+    description:    kit?.description    ?? null,
+    interior_color: kit?.interior_color ?? null,
+    exterior_color: kit?.exterior_color ?? null,
+    engine:         kit?.engine         ?? null,
+  } as Vehicle;
+}
+

@@ -19,6 +19,13 @@ export interface Vehicle {
   trim: string | null;
   stock_number: string | null;
   fuel_type: string | null;
+  // Detail page fields
+  description?: string | null;
+  interior_color?: string | null;
+  exterior_color?: string | null;
+  engine?: string | null;
+  website_copy?: string | null;
+  remarks?: string | null;
 }
 
 export function normalizeDrivetrain(raw: string | null): string | null {

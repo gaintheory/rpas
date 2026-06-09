@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { type Vehicle, getBadge } from '@/lib/vehicle';
 import { getWeeklyPayment } from '@/lib/payments';
 import { dealer } from '@/config/dealerships/right-price';
@@ -21,13 +22,16 @@ export default function InventoryListCard({ vehicle }: { vehicle: Vehicle }) {
     <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row">
 
       {/* Photo */}
-      <div className="relative w-full sm:w-72 md:w-80 flex-none aspect-video sm:aspect-auto bg-surface">
+      <Link
+        href={`/inventory/${vehicle.vin}`}
+        className="relative w-full sm:w-72 md:w-80 flex-none aspect-video sm:aspect-auto bg-surface block overflow-hidden group"
+      >
         {photo ? (
           <Image
             src={photo}
             alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
             fill
-            className="object-cover"
+            className="object-cover group-hover:scale-102 transition-transform duration-200"
             sizes="(max-width: 640px) 100vw, 320px"
           />
         ) : (
@@ -43,20 +47,20 @@ export default function InventoryListCard({ vehicle }: { vehicle: Vehicle }) {
             {badge}
           </span>
         )}
-      </div>
+      </Link>
 
       {/* Info */}
       <div className="flex flex-col flex-1 p-5">
 
         {/* Title + trim */}
-        <div>
-          <h3 className="font-bold text-secondary text-xl leading-snug">
+        <Link href={`/inventory/${vehicle.vin}`} className="block group/title">
+          <h3 className="font-bold text-secondary text-xl leading-snug group-hover/title:text-primary transition-colors">
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h3>
           {vehicle.trim && (
             <p className="text-sm text-muted mt-0.5">{vehicle.trim}</p>
           )}
-        </div>
+        </Link>
 
         {/* Price */}
         <div className="mt-3 flex items-baseline gap-2.5">
