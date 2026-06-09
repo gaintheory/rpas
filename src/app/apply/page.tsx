@@ -17,7 +17,10 @@ export default async function ApplyPage({
     <div className="pt-24 pb-16 px-4 min-h-screen bg-[#f8fafc] relative overflow-hidden">
       {/* Ambient Radial Glow Background */}
       <div 
-        className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_80%_20%,rgba(192,57,43,0.06)_0%,transparent_55%),radial-gradient(circle_at_20%_80%,rgba(26,26,46,0.04)_0%,transparent_55%)] pointer-events-none" 
+        className="absolute inset-0 -z-10 pointer-events-none" 
+        style={{
+          background: 'radial-gradient(circle at 80% 20%, rgba(192, 57, 43, 0.06) 0%, transparent 55%), radial-gradient(circle at 20% 80%, rgba(26, 26, 46, 0.04) 0%, transparent 55%)'
+        }}
         aria-hidden="true" 
       />
       <div className="relative z-10">
