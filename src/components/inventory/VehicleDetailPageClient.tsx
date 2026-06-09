@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type Vehicle, normalizeDrivetrain } from '@/lib/vehicle';
@@ -10,6 +10,7 @@ import { submitInquiry, type InquiryState } from '@/app/actions/inquiry';
 
 export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle }) {
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [inquiryStatus, setInquiryStatus] = useState<InquiryState>({ status: 'idle', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -17,6 +18,21 @@ export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle 
   const weeklyPayment = getWeeklyPayment(vehicle.price);
   const drivetrain = normalizeDrivetrain(vehicle.drivetrain);
   const miles = parseFloat(vehicle.miles ?? '0');
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxOpen(false);
+      if (e.key === 'ArrowLeft') {
+        setActivePhotoIdx((i) => (i - 1 + photos.length) % photos.length);
+      }
+      if (e.key === 'ArrowRight') {
+        setActivePhotoIdx((i) => (i + 1) % photos.length);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxOpen, photos.length]);
 
   const specsList = [
     {
@@ -136,12 +152,16 @@ export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle 
             <div className="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
               {photos.length > 0 ? (
                 <div className="space-y-4 p-3">
-                  <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-black">
+                  <div
+                    onClick={() => setLightboxOpen(true)}
+                    className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-black cursor-zoom-in group/mainimg"
+                    title="Click to view full screen"
+                  >
                     <Image
                       src={photos[activePhotoIdx]}
                       alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
                       fill
-                      className="object-cover"
+                      className="object-cover group-hover/mainimg:scale-[1.01] transition-transform duration-300"
                       sizes="(max-width: 1024px) 100vw, 800px"
                       priority
                     />
@@ -368,6 +388,61 @@ export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle 
         </div>
 
       </div>
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && photos.length > 0 && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/95 flex flex-col justify-center items-center cursor-zoom-out"
+          onClick={() => setLightboxOpen(false)}
+        >
+          {/* Close button */}
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-6 right-6 text-white/80 hover:text-white text-5xl font-light z-50 p-2 cursor-pointer transition-colors"
+            aria-label="Close lightbox"
+          >
+            &times;
+          </button>
+
+          {/* Main image container */}
+          <div className="relative w-full h-[80vh] max-w-5xl px-4 flex items-center justify-center">
+            <div className="relative w-full h-full" onClick={(e) => e.stopPropagation()}>
+              <Image
+                src={photos[activePhotoIdx]}
+                alt={`${vehicle.year} ${vehicle.make} ${vehicle.model} - Large`}
+                fill
+                className="object-contain select-none"
+                sizes="(max-width: 1280px) 100vw, 1200px"
+                priority
+              />
+            </div>
+
+            {/* Navigation arrows */}
+            {photos.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setActivePhotoIdx((i) => (i - 1 + photos.length) % photos.length); }}
+                  className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 border border-white/20 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all cursor-pointer select-none"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setActivePhotoIdx((i) => (i + 1) % photos.length); }}
+                  className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 border border-white/20 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl transition-all cursor-pointer select-none"
+                >
+                  ›
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Counter */}
+          <span className="text-white/60 text-sm mt-4 tracking-wider select-none" onClick={(e) => e.stopPropagation()}>
+            {activePhotoIdx + 1} / {photos.length}
+          </span>
+        </div>
+      )}
+
     </div>
   );
 }
