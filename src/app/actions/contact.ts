@@ -24,6 +24,11 @@ export async function submitContactLead(
   const zipCode = formData.get('zipCode')?.toString().trim();
   const creditScore = formData.get('creditScore')?.toString().trim();
   const message = formData.get('message')?.toString().trim() || '';
+  
+  // Robust additional fields
+  const bestTime = formData.get('bestTime')?.toString().trim() || 'N/A';
+  const employmentStatus = formData.get('employmentStatus')?.toString().trim() || 'N/A';
+  const referral = formData.get('referral')?.toString().trim() || 'N/A';
 
   // Validation
   if (!name || !phone || !inquiryType || !contactMethod || !zipCode || !creditScore) {
@@ -44,12 +49,14 @@ Zip Code: ${zipCode}
 
 Inquiry Details:
 - Type of Inquiry: ${inquiryType}
-- Preferred Contact: ${contactMethod}
+- Preferred Contact: ${contactMethod} (Best Time: ${bestTime})
 - Vehicle of Interest: ${vehicleOfInterest}
+- Referral Source: ${referral}
 
-Financial Profile:
+Financial & Employment Profile:
 - Self-Reported Credit: ${creditScore.toUpperCase()}
 - Down Payment Ready: ${downPayment}
+- Employment Status: ${employmentStatus}
 
 Customer Message:
 "${message || 'No additional message provided'}"
