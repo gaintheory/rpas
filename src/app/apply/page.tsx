@@ -15,11 +15,21 @@ export default async function ApplyPage({
 
   return (
     <div className="pt-24 pb-16 px-4 min-h-screen bg-[#f8fafc] relative overflow-hidden">
+      {/* Background Dealer Lot Image with desaturated overlay */}
+      <div 
+        className="absolute inset-0 -z-20 pointer-events-none bg-no-repeat bg-cover bg-center" 
+        style={{
+          backgroundImage: 'url("/dealer-lot.jpg")',
+          opacity: 0.12,
+          filter: 'grayscale(35%) contrast(1.05)',
+        }}
+        aria-hidden="true" 
+      />
       {/* Ambient Radial Glow Background */}
       <div 
         className="absolute inset-0 -z-10 pointer-events-none" 
         style={{
-          background: 'radial-gradient(circle at 80% 20%, rgba(192, 57, 43, 0.06) 0%, transparent 55%), radial-gradient(circle at 20% 80%, rgba(26, 26, 46, 0.04) 0%, transparent 55%)'
+          background: 'radial-gradient(circle at 80% 20%, rgba(192, 57, 43, 0.08) 0%, transparent 60%), radial-gradient(circle at 20% 80%, rgba(26, 26, 46, 0.05) 0%, transparent 60%)'
         }}
         aria-hidden="true" 
       />
