@@ -6,19 +6,19 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { dealer } from '@/config/dealerships/right-price';
 
-const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'Inventory', href: '/inventory' },
-  { label: 'Apply', href: dealer.creditAppUrl, external: false },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-];
-
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
+
+  const NAV_LINKS = [
+    { label: 'Home', href: '/' },
+    { label: 'Inventory', href: '/inventory' },
+    { label: 'Apply', href: dealer.creditAppUrl, external: false },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+  ];
 
   useEffect(() => {
     const read = () => {
