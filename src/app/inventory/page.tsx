@@ -1,6 +1,8 @@
 import { getAvailableInventory } from '@/lib/inventory';
 import InventoryPageClient from '@/components/inventory/InventoryPageClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Used Car Inventory | Right Price Auto Sales — Murfreesboro TN',
   description:

@@ -3,6 +3,8 @@ import VehicleDetailPageClient from '@/components/inventory/VehicleDetailPageCli
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 interface RouteProps {
   params: Promise<{ vin: string }>;
 }

@@ -1,6 +1,7 @@
 'use server';
 
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { notifyNewLead } from '@/lib/notify';
 
 const DEALERSHIP_ID = 'c0e0a112-83d3-4a83-81f4-5ac11b3b87c7';
 
@@ -63,13 +64,13 @@ Customer Message:
   `.trim();
 
   // Insert Lead to Supabase
-  const { error } = await supabase.from('leads').insert({
+  const { error } = await supabaseAdmin.from('leads').insert({
     dealership_id: DEALERSHIP_ID,
     first_name: name,
     phone,
     email,
     notes,
-    source: 'contact_form',
+    source: formData.get('source')?.toString() || 'contact_form',
     utm: {},
   });
 
@@ -80,6 +81,16 @@ Customer Message:
       message: 'Failed to submit inquiry. Please call us directly.',
     };
   }
+
+  // Non-fatal notifications — email + SMS
+  notifyNewLead({
+    leadType:          formData.get('source')?.toString() || 'contact_form',
+    name,
+    phone,
+    email,
+    message,
+    vehicleOfInterest: vehicleOfInterest !== 'N/A' ? vehicleOfInterest : null,
+  }).catch(e => console.error('[contact lead submission] Notify failed:', e.message));
 
   return { status: 'success', message: 'Success' };
 }

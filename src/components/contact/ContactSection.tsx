@@ -39,6 +39,7 @@ export default function ContactSection() {
     formData.append('downPayment', downPayment);
     formData.append('creditScore', creditScore);
     formData.append('message', message);
+    formData.append('source', 'stephen_cta');
 
     startTransition(async () => {
       const result = await submitContactLead({ status: 'idle', message: '' }, formData);

@@ -42,3 +42,9 @@ next-env.d.ts
 
 # local tool configurations
 .claude/
+
+.vercel
+
+# separate projects
+dms/
+scratch/

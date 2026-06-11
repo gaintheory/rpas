@@ -45,6 +45,7 @@ export default function ContactPage() {
     formData.append('referral', referral);
     formData.append('creditScore', creditScore);
     formData.append('message', message);
+    formData.append('source', 'contact_form');
 
     startTransition(async () => {
       const result = await submitContactLead({ status: 'idle', message: '' }, formData);

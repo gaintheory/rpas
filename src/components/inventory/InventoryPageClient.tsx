@@ -403,7 +403,7 @@ export default function InventoryPageClient({ vehicles }: { vehicles: Vehicle[] 
               placeholder="Search year, make, or model…"
               value={searchQuery}
               onChange={e => { setSearchQuery(e.target.value); pushParams({ q: e.target.value }); }}
-              className="w-full pl-11 pr-10 py-3.5 rounded-full border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
+              className="w-full pl-11 pr-10 py-3.5 rounded-full border border-primary bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
             />
             {searchQuery && (
               <button

@@ -1,6 +1,7 @@
 'use server'
 
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { notifyNewLead } from '@/lib/notify'
 
 const DEALERSHIP_ID = 'c0e0a112-83d3-4a83-81f4-5ac11b3b87c7'
 
@@ -22,7 +23,7 @@ export async function submitInquiry(
     return { status: 'error', message: 'Name and phone are required.' }
   }
 
-  const { error } = await supabase.from('leads').insert({
+  const { error } = await supabaseAdmin.from('leads').insert({
     dealership_id: DEALERSHIP_ID,
     first_name: name,
     phone,
@@ -39,6 +40,14 @@ export async function submitInquiry(
       message: 'Something went wrong. Please call us directly.',
     }
   }
+
+  notifyNewLead({
+    leadType: 'hero_form',
+    name,
+    phone,
+    email,
+    message: notes,
+  }).catch(e => console.error('[inquiry] Notify failed:', e.message))
 
   return { status: 'success', message: '' }
 }
