@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type Vehicle, normalizeDrivetrain } from '@/lib/vehicle';
+import { normalizeSpecs } from '@/lib/specs';
 import { getWeeklyPayment } from '@/lib/payments';
 import { dealer } from '@/config/dealerships/right-price';
 import { submitInquiry, type InquiryState } from '@/app/actions/inquiry';
@@ -18,6 +19,7 @@ export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle 
   const weeklyPayment = getWeeklyPayment(vehicle.price);
   const drivetrain = normalizeDrivetrain(vehicle.drivetrain);
   const miles = parseFloat(vehicle.miles ?? '0');
+  const specs = useMemo(() => normalizeSpecs(vehicle.specs), [vehicle.specs]);
 
   useEffect(() => {
     if (!lightboxOpen) return;
@@ -277,6 +279,108 @@ export default function VehicleDetailPageClient({ vehicle }: { vehicle: Vehicle 
                 </div>
               </div>
             </div>
+
+          {/* Rich VIN-decoded spec sections */}
+          {specs.hasData && (
+            <>
+              {specs.keyDetails.length > 0 && (
+                <div className="border-t border-gray-100 pt-8">
+                  <h2 className="text-xl font-extrabold text-secondary tracking-tight mb-4">Key Details</h2>
+                  <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                    <div className="divide-y divide-gray-100">
+                      {specs.keyDetails.map(({ label, value }) => (
+                        <div key={label} className="flex justify-between p-4 text-sm">
+                          <span className="text-gray-400 font-medium">{label}</span>
+                          <span className="font-bold text-secondary text-right max-w-[60%]">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {specs.engine.length > 0 && (
+                <div className="border-t border-gray-100 pt-8">
+                  <h2 className="text-xl font-extrabold text-secondary tracking-tight mb-4">Engine</h2>
+                  <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm bg-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 divide-gray-100">
+                      <div className="divide-y divide-gray-100">
+                        {specs.engine.slice(0, Math.ceil(specs.engine.length / 2)).map(({ label, value }) => (
+                          <div key={label} className="flex justify-between p-4 text-sm">
+                            <span className="text-gray-400 font-medium">{label}</span>
+                            <span className="font-bold text-secondary">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="divide-y divide-gray-100 md:border-l border-gray-100">
+                        {specs.engine.slice(Math.ceil(specs.engine.length / 2)).map(({ label, value }) => (
+                          <div key={label} className="flex justify-between p-4 text-sm">
+                            <span className="text-gray-400 font-medium">{label}</span>
+                            <span className="font-bold text-secondary">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {specs.transmission.length > 0 && (
+                <div className="border-t border-gray-100 pt-8">
+                  <h2 className="text-xl font-extrabold text-secondary tracking-tight mb-4">Transmission &amp; Drivetrain</h2>
+                  <div className="border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                    <div className="divide-y divide-gray-100">
+                      {specs.transmission.map(({ label, value }) => (
+                        <div key={label} className="flex justify-between p-4 text-sm">
+                          <span className="text-gray-400 font-medium">{label}</span>
+                          <span className="font-bold text-secondary">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {specs.equipment.length > 0 && (
+                <div className="border-t border-gray-100 pt-8">
+                  <h2 className="text-xl font-extrabold text-secondary tracking-tight mb-4">Standard Equipment</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {specs.equipment.map(({ category, items }) => (
+                      <div key={category}>
+                        <h3 className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-2">{category}</h3>
+                        <ul className="space-y-1">
+                          {items.map((item, i) => (
+                            <li key={i} className="text-sm text-gray-700 font-medium flex items-start gap-2">
+                              <span className="mt-1.5 w-1 h-1 rounded-full bg-primary flex-none" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {specs.colors.length > 0 && (
+                <div className="border-t border-gray-100 pt-8">
+                  <h2 className="text-xl font-extrabold text-secondary tracking-tight mb-4">Factory Colors</h2>
+                  <div className="space-y-4">
+                    {specs.colors.map(({ category, items }) => (
+                      <div key={category}>
+                        <h3 className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-2">{category}</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {items.map((color, i) => (
+                            <span key={i} className="text-xs font-semibold border border-gray-200 rounded-full px-3 py-1 text-gray-600 bg-gray-50">{color}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
 
           </div>
 

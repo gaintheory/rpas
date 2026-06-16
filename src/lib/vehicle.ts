@@ -26,6 +26,7 @@ export interface Vehicle {
   engine?: string | null;
   website_copy?: string | null;
   remarks?: string | null;
+  specs?: unknown;
 }
 
 export function normalizeDrivetrain(raw: string | null): string | null {
